@@ -26,14 +26,17 @@
         "__id__": 4
       },
       {
-        "__id__": 6
+        "__id__": 7
       },
       {
-        "__id__": 8
+        "__id__": 9
+      },
+      {
+        "__id__": 11
       }
     ],
     "_prefab": {
-      "__id__": 10
+      "__id__": 13
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -54,7 +57,7 @@
       "y": 1,
       "z": 1
     },
-    "_mobility": 0,
+    "_mobility": 2,
     "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
@@ -102,9 +105,13 @@
     "__prefab": {
       "__id__": 5
     },
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 6
+      }
+    ],
     "_interactable": true,
-    "_transition": 2,
+    "_transition": 0,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -138,7 +145,7 @@
     "_pressedSprite": null,
     "_disabledSprite": null,
     "_duration": 0.1,
-    "_zoomScale": 1.2,
+    "_zoomScale": 0.7,
     "_target": {
       "__id__": 1
     },
@@ -149,6 +156,16 @@
     "fileId": "58GL2pIQtNfZ2T3IZS89Xl"
   },
   {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 1
+    },
+    "component": "",
+    "_componentId": "cce8fYrMQBJ66J0+VZbOFEJ",
+    "handler": "onClick",
+    "customEventData": ""
+  },
+  {
     "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
@@ -157,7 +174,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 7
+      "__id__": 8
     },
     "_customMaterial": null,
     "_srcBlendFactor": 2,
@@ -180,7 +197,7 @@
     },
     "_fillStart": 0,
     "_fillRange": 0,
-    "_isTrimmedMode": true,
+    "_isTrimmedMode": false,
     "_useGrayscale": false,
     "_atlas": null,
     "_id": ""
@@ -198,13 +215,33 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 9
+      "__id__": 10
     },
     "_id": ""
   },
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "da6h0BFhtLYqzqnmaPAoF2"
+  },
+  {
+    "__type__": "67a46zXMuxLH4/AvoxYvJAO",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 12
+    },
+    "fallingSpeed": 7,
+    "accelerationFactor": 0.2,
+    "pauseTimeBeforeFalling": 0.3,
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "84xNdrVUJIQ4eW5Gv2fcCl"
   },
   {
     "__type__": "cc.PrefabInfo",

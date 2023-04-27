@@ -1,8 +1,8 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('TilesSprites')
-export class TilesSprites extends Component {
+@ccclass('TilesSpritesList')
+export class TilesSpritesList extends Component {
     private spritesList: SpriteFrame[] = [];
 
     private isLoaded: boolean = false;

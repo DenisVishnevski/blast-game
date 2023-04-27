@@ -1,14 +1,19 @@
 import { _decorator, Component, Node } from 'cc';
 import { TileModel } from './TileModel';
+import { EventsController } from '../controllers/EventsController';
+import { TilesArray } from '../utils/TilesArray';
 const { ccclass, property } = _decorator;
 
-@ccclass('Container')
+@ccclass('ContainerModel')
 export class ContainerModel extends Component {
     @property
     private size: number = 0;
 
+    @property({ type: EventsController })
+    private eventsController: EventsController = null;
+
     private itemsCount: number = 5;
-    private tiles: TileModel[] = [];
+    private tiles: TileModel[][] = [];
 
     protected start(): void {
         this.initTiles();
@@ -18,13 +23,96 @@ export class ContainerModel extends Component {
         return this.tiles
     }
 
-    private initTiles(): void {
-        for (let index = 0; index < this.size ** 2; index++) {
-            const newTile: TileModel = new TileModel();
-            newTile.setId(this.getRandomNumber());
-
-            this.tiles.push(newTile);
+    public handleTile(tileСoordinates: { x: number, y: number }): void {
+        const destroyedTilesList = this.getDestroyedTiles([tileСoordinates]);
+        if (destroyedTilesList.length > 1) {
+            this.resetTilesList(destroyedTilesList);
         }
+    }
+
+    private resetTilesList(destroyedTiles: { x: number, y: number }[]) {
+        destroyedTiles = new TilesArray(destroyedTiles).largestToSmallestYSort();
+
+        destroyedTiles.forEach((tileСoordinates: { x: number, y: number }) => {
+            this.tiles[tileСoordinates.x].splice(tileСoordinates.y, 1);
+            this.tiles[tileСoordinates.x].push(this.addNewTile());
+        });
+        this.eventsController.getEventTarget().emit('onUpdate', destroyedTiles, this.tiles);
+    }
+
+    private getDestroyedTiles(checkingTiles: { x: number, y: number }[]): { x: number, y: number }[] {
+        const finishedTilesList: { x: number, y: number }[] = checkingTiles;
+        let newTiles: { x: number, y: number }[] = [];
+
+        checkingTiles.forEach((checkingTile: { x: number, y: number }) => {
+            const checkedTilesList = [
+                ...this.getVerticalSameTiles(checkingTile),
+                ...this.getHorisontalSameTiles(checkingTile),
+            ];
+            newTiles.push(...checkedTilesList.filter((checkedTile: { x: number, y: number }) => {
+                let isUnique: boolean = true;
+
+                (finishedTilesList.forEach((finishedTile: { x: number, y: number }) => {
+                    if (checkedTile.x === finishedTile.x && checkedTile.y === finishedTile.y) {
+                        isUnique = false;
+                    }
+                }));
+                return isUnique
+            }));
+        });
+        newTiles = new TilesArray(newTiles).getUniqueTiles();
+
+        if (newTiles.length > 0 && finishedTilesList.length < 20) {
+            return this.getDestroyedTiles([...finishedTilesList, ...newTiles]);
+        }
+        return finishedTilesList
+    }
+
+    private getVerticalSameTiles(tileСoordinates: { x: number, y: number }) {
+        const checkedTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y];
+        const topTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y + 1];
+        const bottomTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y - 1];
+
+        const sameTiles = [];
+        if (topTile && checkedTile.getId() === topTile.getId()) {
+            sameTiles.push({ x: tileСoordinates.x, y: tileСoordinates.y + 1 });
+        }
+        if (bottomTile && checkedTile.getId() === bottomTile.getId()) {
+            sameTiles.push({ x: tileСoordinates.x, y: tileСoordinates.y - 1 });
+        }
+        return sameTiles
+    }
+
+    private getHorisontalSameTiles(tileСoordinates: { x: number, y: number }) {
+        const checkedTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y];
+        const leftTile: TileModel = this.tiles[tileСoordinates.x - 1] && this.tiles[tileСoordinates.x - 1][tileСoordinates.y];
+        const rightTile: TileModel = this.tiles[tileСoordinates.x + 1] && this.tiles[tileСoordinates.x + 1][tileСoordinates.y];
+
+        const sameTiles: { x: number, y: number }[] = [];
+        if (rightTile && checkedTile.getId() === rightTile.getId()) {
+            sameTiles.push({ x: tileСoordinates.x + 1, y: tileСoordinates.y });
+        }
+        if (leftTile && checkedTile.getId() === leftTile.getId()) {
+            sameTiles.push({ x: tileСoordinates.x - 1, y: tileСoordinates.y });
+        }
+        return sameTiles
+    }
+
+    private initTiles(): void {
+        for (let x = 0; x < this.size; x++) {
+            const column: TileModel[] = []
+
+            for (let y = 0; y < this.size; y++) {
+                column.push(this.addNewTile());
+            }
+            this.tiles.push(column);
+        }
+    }
+
+    private addNewTile() {
+        const newTile: TileModel = new TileModel();
+        newTile.setId(this.getRandomNumber());
+        return newTile
     }
 
     private getRandomNumber(): number {

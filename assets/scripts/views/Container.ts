@@ -1,8 +1,9 @@
-import { _decorator, Component, instantiate, Layout, Node, Prefab, Size, Sprite, SpriteFrame, UITransform } from 'cc';
+import { _decorator, Button, Component, instantiate, Layout, Node, Prefab, Size, Sprite, SpriteFrame, UITransform } from 'cc';
 import { Tile } from './Tile';
 import { TileModel } from '../models/TileModel';
-import { ContainerController } from '../controllers/ContainerController';
 import { EventsController } from '../controllers/EventsController';
+import { TilesArray } from '../utils/TilesArray';
+import { TilesAnimationsHandler } from './TilesAnimationsHandler';
 const { ccclass, property } = _decorator;
 
 @ccclass('Container')
@@ -16,7 +17,11 @@ export class Container extends Component {
     @property({ type: EventsController })
     private eventsController: EventsController = null;
 
-    private tiles: Tile[] = [];
+    @property({ type: Button })
+    private blockPanel: Button = null;
+
+    private tiles: Tile[][] = [];
+    private tilesSize: Size;
 
     private isLoaded: boolean = false;
 
@@ -25,13 +30,49 @@ export class Container extends Component {
         await this.initTiles();
 
         this.isLoaded = true;
-        this.eventsController.getEventTarget().emit('isLoaded');
+        this.eventsController.getEventTarget().emit('onLoaded');
     }
 
-    public async setSpritesToTiles(tilesIdList: TileModel[]): Promise<void> {
-        this.tiles.forEach((tile: Tile, index) => {
-            tile.setSprite(tilesIdList[index].getId());
+    public updateTiles(destroyedTiles: { x: number, y: number }[], tilesList: TileModel[][]) {
+        this.blockTilesForClick();
+        this.tiles.forEach((tilesColumn: Tile[], x) => {
+            tilesColumn.forEach((tile: Tile, y) => {
+                let minY: number = this.size;
+                let rawDestroyedTiles: { x: number, y: number }[] = [];
+
+                destroyedTiles.forEach((tileСoordinates: { x: number, y: number }) => {
+                    if (tileСoordinates.x === x) {
+                        if (tileСoordinates.y < minY) {
+                            minY = tileСoordinates.y;
+                        }
+                        tile.setSprite(tilesList[x][y].getId());
+                        rawDestroyedTiles.push(tileСoordinates);
+                    }
+                });
+                rawDestroyedTiles = new TilesArray(rawDestroyedTiles).smallestToLargestYSort();
+
+                const tilesAnimation = new TilesAnimationsHandler(rawDestroyedTiles);
+                tilesAnimation.destroyAnimation(tile, y, minY)
+            });
+
         });
+        this.scheduleOnce(this.unblockTilesForClick, .55);
+    }
+
+    public async setSpritesToTiles(tilesList: TileModel[][]): Promise<void> {
+        this.tiles.forEach((column: Tile[], x) => {
+            column.forEach((tile: Tile, y) => {
+                tile.setSprite(tilesList[x][y].getId());
+            });
+        });
+    }
+
+    private blockTilesForClick() {
+        this.blockPanel.onEnable();
+    }
+
+    private unblockTilesForClick() {
+        this.blockPanel.onDisable();
     }
 
     private async setTilesSize(): Promise<void> {
@@ -41,25 +82,32 @@ export class Container extends Component {
         const tileWidth = (uiTransform.width - layout.padding * 2) / this.size;
         const tileHeight = tileWidth + tileWidth / 12;
 
-        const tileSize: Size = new Size(tileWidth, tileHeight);
+        this.tilesSize = new Size(tileWidth, tileHeight);
 
-        layout.cellSize.set(tileSize);
-        layout.spacingY = -tileSize.height / 10;
+        layout.cellSize.set(this.tilesSize);
+        layout.spacingY = -this.tilesSize.height / 10;
     }
 
     private async initTiles(): Promise<void> {
-        for (let index = 0; index < this.size ** 2; index++) {
-            try {
-                const newTile = instantiate(this.tilePrefab);
+        for (let x = 0; x < this.size; x++) {
+            const column: Tile[] = []
 
-                newTile.name = this.tilePrefab.name + index
-                newTile.parent = this.node;
-    
-                this.tiles.push(newTile.getComponent(Tile));
+            for (let y = 0; y < this.size; y++) {
+                try {
+                    const newTile = instantiate(this.tilePrefab);
+                    newTile.name = this.tilePrefab.name + ` (${x}, ${y})`;
+                    newTile.parent = this.node;
 
-            } catch (error) {
-                console.error(error);
+                    const tileComponent = newTile.getComponent(Tile);
+                    tileComponent.setCoordinates(x, y);
+                    tileComponent.setHeight(this.tilesSize.height - this.tilesSize.height / 10);
+
+                    column.push(tileComponent);
+                } catch (error) {
+                    console.error(error);
+                }
             }
+            this.tiles.push(column);
         }
     }
 }

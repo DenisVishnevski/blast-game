@@ -1,17 +1,42 @@
-import { _decorator, Component, find, Node, Sprite } from 'cc';
-import { TilesSprites } from './TilesSprites';
+import { _decorator, Component, find, Node, Size, Sprite } from 'cc';
+import { TilesSpritesList } from './TilesSpritesList';
+import { EventsController } from '../controllers/EventsController';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tile')
 export class Tile extends Component {
+    protected static height: number;
+    private eventsController: EventsController;
+    private coordinates: { x: number, y: number } = {
+        x: 0,
+        y: 0
+    }
+
+    protected start(): void {
+        this.eventsController = find('Controller').getComponent(EventsController);
+        
+    }
+
+    public setCoordinates(x: number, y: number): void {
+        this.coordinates = { x, y }
+    }
+
+    public setHeight(height: number) {
+        Tile.height = height;
+    }
+
     public setSprite(spritesId: number): void {
-        const tilesSprites = find('View/Canvas/TilesSprites').getComponent(TilesSprites);
+        const spritesList = find('View/Canvas/TilesSpritesList').getComponent(TilesSpritesList);
 
         try {
-            this.node.getComponent(Sprite).spriteFrame = tilesSprites.getSpritesList()[spritesId];
+            this.node.getComponent(Sprite).spriteFrame = spritesList.getSpritesList()[spritesId];
         } catch (error) {
             console.error(error);
         }
+    }
+
+    private onClick(): void {
+        this.eventsController.getEventTarget().emit('onTileClick', this.coordinates)
     }
 }
 
