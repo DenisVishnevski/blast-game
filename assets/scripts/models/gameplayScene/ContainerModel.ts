@@ -1,13 +1,13 @@
 import { _decorator, Component, Node } from 'cc';
 import { TileModel } from './TileModel';
-import { EventsController } from '../controllers/EventsController';
-import { TilesArray } from '../utils/TilesArray';
+import { GlobalSettings } from '../GlobalSettings';
+import { EventsController } from '../../controllers/EventsController';
+import { TilesArray } from '../../utils/TilesArray';
 const { ccclass, property } = _decorator;
 
 @ccclass('ContainerModel')
 export class ContainerModel extends Component {
-    @property
-    private size: number = 0;
+    private size: number = GlobalSettings.getTilesContainerSize();
 
     @property({ type: EventsController })
     private eventsController: EventsController = null;

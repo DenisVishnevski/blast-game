@@ -1,6 +1,6 @@
 import { _decorator, Component, find, Node, Size, Sprite } from 'cc';
+import { EventsController } from '../../controllers/EventsController';
 import { TilesSpritesList } from './TilesSpritesList';
-import { EventsController } from '../controllers/EventsController';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tile')

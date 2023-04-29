@@ -236,7 +236,7 @@
     },
     "fallingSpeed": 7,
     "accelerationFactor": 0.2,
-    "pauseTimeBeforeFalling": 0.3,
+    "pauseTimeBeforeFalling": 0.2,
     "_id": ""
   },
   {

@@ -1,8 +1,7 @@
 import { _decorator, Component, Node } from 'cc';
-import { Tile } from '../views/Tile';
-import { Container } from '../views/Container';
-import { ContainerModel } from '../models/ContainerModel';
-import { EventsController } from './EventsController';
+import { Container } from '../../views/gameplayScene/Container';
+import { ContainerModel } from '../../models/gameplayScene/ContainerModel';
+import { EventsController } from '../EventsController';
 const { ccclass, property } = _decorator;
 
 @ccclass('ContainerController')

@@ -1,15 +1,15 @@
 import { _decorator, Button, Component, instantiate, Layout, Node, Prefab, Size, Sprite, SpriteFrame, UITransform } from 'cc';
+import { GlobalSettings } from '../../models/GlobalSettings';
+import { EventsController } from '../../controllers/EventsController';
+import { TilesArray } from '../../utils/TilesArray';
 import { Tile } from './Tile';
-import { TileModel } from '../models/TileModel';
-import { EventsController } from '../controllers/EventsController';
-import { TilesArray } from '../utils/TilesArray';
 import { TilesAnimationsHandler } from './TilesAnimationsHandler';
+import { TileModel } from '../../models/gameplayScene/TileModel';
 const { ccclass, property } = _decorator;
 
 @ccclass('Container')
 export class Container extends Component {
-    @property
-    private size: number = 0;
+    private size: number = GlobalSettings.getTilesContainerSize();
 
     @property({ type: Prefab })
     private tilePrefab: Prefab = null;
