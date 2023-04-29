@@ -9,7 +9,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Container')
 export class Container extends Component {
-    private size: number = GlobalSettings.getTilesContainerSize();
+    @property({ type: GlobalSettings })
+    private globalSettings: GlobalSettings = null;
 
     @property({ type: Prefab })
     private tilePrefab: Prefab = null;
@@ -20,12 +21,16 @@ export class Container extends Component {
     @property({ type: Button })
     private blockPanel: Button = null;
 
+    private size: number = 0;
+
     private tiles: Tile[][] = [];
     private tilesSize: Size;
 
     private isLoaded: boolean = false;
 
     protected async start(): Promise<void> {
+        this.size = GlobalSettings.getTilesContainerSize() || this.globalSettings.getLocalTilesContainerSize();
+
         await this.setTilesSize();
         await this.initTiles();
 

@@ -7,15 +7,17 @@ const { ccclass, property } = _decorator;
 
 @ccclass('ContainerModel')
 export class ContainerModel extends Component {
-    private size: number = GlobalSettings.getTilesContainerSize();
-
     @property({ type: EventsController })
     private eventsController: EventsController = null;
+
+    private size: number = 0;
 
     private itemsCount: number = 5;
     private tiles: TileModel[][] = [];
 
     protected start(): void {
+        this.size = GlobalSettings.getTilesContainerSize()
+            || this.getComponent(GlobalSettings).getLocalTilesContainerSize();
         this.initTiles();
     }
 
@@ -27,6 +29,8 @@ export class ContainerModel extends Component {
         const destroyedTilesList = this.getDestroyedTiles([tileСoordinates]);
         if (destroyedTilesList.length > 1) {
             this.resetTilesList(destroyedTilesList);
+            this.eventsController.getEventTarget().emit('onUpdate', destroyedTilesList, this.tiles);
+            this.eventsController.getEventTarget().emit('onDestroyTiles', destroyedTilesList.length);
         }
     }
 
@@ -37,7 +41,6 @@ export class ContainerModel extends Component {
             this.tiles[tileСoordinates.x].splice(tileСoordinates.y, 1);
             this.tiles[tileСoordinates.x].push(this.addNewTile());
         });
-        this.eventsController.getEventTarget().emit('onUpdate', destroyedTiles, this.tiles);
     }
 
     private getDestroyedTiles(checkingTiles: { x: number, y: number }[]): { x: number, y: number }[] {
