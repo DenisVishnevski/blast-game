@@ -1,6 +1,7 @@
 import { _decorator, Component, Node } from 'cc';
 import { EventsController } from '../../controllers/EventsController';
 import { GlobalSettings } from '../GlobalSettings';
+import { DevSettings } from '../DevSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameplayLogicModel')
@@ -16,8 +17,10 @@ export class GameplayLogicModel extends Component {
     isWin: boolean
 
     protected start(): void {
-        this.clicksCount = this.getComponent(GlobalSettings).getClicksCount();
-        this.totalPointsCount = this.getComponent(GlobalSettings).getTotalPointsCount();
+        this.clicksCount = GlobalSettings.getClicksCount() ||
+            this.getComponent(DevSettings).getClicksCount();
+        this.totalPointsCount = GlobalSettings.getTotalPointsCount() ||
+            this.getComponent(DevSettings).getTotalPointsCount();
     }
 
     public addPoint(destroyedTilesCount: number): void {

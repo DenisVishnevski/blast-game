@@ -5,12 +5,13 @@ import { TilesArray } from '../../utils/TilesArray';
 import { Tile } from './Tile';
 import { TilesAnimationsHandler } from './TilesAnimationsHandler';
 import { TileModel } from '../../models/gameplayScene/TileModel';
+import { DevSettings } from '../../models/DevSettings';
+import { IDifficultySetting } from '../../models/IDifficultySetting';
 const { ccclass, property } = _decorator;
-
 @ccclass('Container')
 export class Container extends Component {
-    @property({ type: GlobalSettings })
-    private globalSettings: GlobalSettings = null;
+    @property({ type: DevSettings })
+    private devSettings: IDifficultySetting = null;
 
     @property({ type: Prefab })
     private tilePrefab: Prefab = null;
@@ -29,7 +30,7 @@ export class Container extends Component {
     private isLoaded: boolean = false;
 
     protected async start(): Promise<void> {
-        this.size = GlobalSettings.getTilesContainerSize() || this.globalSettings.getLocalTilesContainerSize();
+        this.size = GlobalSettings.getTilesContainerSize() || this.devSettings.getTilesContainerSize();
 
         await this.setTilesSize();
         await this.initTiles();

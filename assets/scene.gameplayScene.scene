@@ -1087,7 +1087,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "globalSettings": {
+    "devSettings": {
       "__id__": 30
     },
     "tilePrefab": {
@@ -1103,7 +1103,7 @@
     "_id": "49VZqzyMZDuKKW0es1rfIV"
   },
   {
-    "__type__": "1f690n52oRI7poczvc1XrHn",
+    "__type__": "e8b7dKQp8VMOLw4N1oInTWz",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1111,10 +1111,10 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "localTilesContainerSize": 7,
+    "tilesContainerSize": 7,
     "clicksCount": 30,
     "totalPointsCount": 100,
-    "_id": "0fjGKxorFMcJ3UVmkibWCO"
+    "_id": "b5qjWZo3tA+6/haV+KW9sg"
   },
   {
     "__type__": "cc.Node",
@@ -1290,7 +1290,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "globalSettings": {
+    "devSettings": {
       "__id__": 30
     },
     "clicksCounter": {

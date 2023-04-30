@@ -1,32 +1,32 @@
 import { _decorator, Component, find, Label, Node } from 'cc';
 import { EventsController } from '../../controllers/EventsController';
+import { IDifficultySetting } from '../../models/IDifficultySetting';
 const { ccclass, property } = _decorator;
 
 @ccclass('DifficultySetting')
 export class DifficultySetting extends Component {
     private eventsController: EventsController;
 
-    private tilesContainerSize: number = 0;
+    private difficultyLevel: IDifficultySetting;;
 
     protected start(): void {
         this.eventsController = find('Controller').getComponent(EventsController);
-        
     }
 
-    public setValue(tilesContainerSize: number): void {
-        this.tilesContainerSize = tilesContainerSize;
+    public setValue(difficultyLevel: IDifficultySetting): void {
+        this.difficultyLevel = difficultyLevel;
         this.displayValue();
     }
 
     private displayValue(): void {
         const label = this.node.getChildByName('Label');
-        const valueByString = this.tilesContainerSize.toString();
+        const valueByString = this.difficultyLevel.getTilesContainerSize().toString();
 
         label.getComponent(Label).string = `${valueByString}x${valueByString}`
     }
 
     private onClick(): void {
-        this.eventsController.getEventTarget().emit('onStartGame', this.tilesContainerSize);
+        this.eventsController.getEventTarget().emit('onStartGame', this.difficultyLevel);
     }
 }
 

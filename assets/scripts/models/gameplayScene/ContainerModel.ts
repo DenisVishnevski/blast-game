@@ -3,6 +3,7 @@ import { TileModel } from './TileModel';
 import { GlobalSettings } from '../GlobalSettings';
 import { EventsController } from '../../controllers/EventsController';
 import { TilesArray } from '../../utils/TilesArray';
+import { DevSettings } from '../DevSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('ContainerModel')
@@ -17,7 +18,7 @@ export class ContainerModel extends Component {
 
     protected start(): void {
         this.size = GlobalSettings.getTilesContainerSize()
-            || this.getComponent(GlobalSettings).getLocalTilesContainerSize();
+            || this.getComponent(DevSettings).getTilesContainerSize();
         this.initTiles();
     }
 

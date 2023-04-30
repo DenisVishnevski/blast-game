@@ -1,11 +1,13 @@
 import { _decorator, Component, Label, Node } from 'cc';
+import { DevSettings } from '../../models/DevSettings';
 import { GlobalSettings } from '../../models/GlobalSettings';
+import { IDifficultySetting } from '../../models/IDifficultySetting';
 const { ccclass, property } = _decorator;
 
 @ccclass('InformationPanel')
 export class InformationPanel extends Component {
-    @property({ type: GlobalSettings })
-    private globalSettings: GlobalSettings = null;
+    @property({ type: DevSettings })
+    private devSettings: IDifficultySetting = null;
 
     @property({type: Label})
     private clicksCounter: Label = null;
@@ -14,7 +16,7 @@ export class InformationPanel extends Component {
     private pointsCounter: Label = null;
 
     protected start(): void {
-        this.setClicksCount(this.globalSettings.getClicksCount());
+        this.setClicksCount(GlobalSettings.getClicksCount() || this.devSettings.getClicksCount());
         this.setPointsCount(0);
     }
    
@@ -23,7 +25,7 @@ export class InformationPanel extends Component {
     }
 
     public setPointsCount(pointsCount: number): void {
-        this.pointsCounter.string = `${pointsCount.toString()}/${this.globalSettings.getTotalPointsCount()}`
+        this.pointsCounter.string = `${pointsCount.toString()}/${GlobalSettings.getTotalPointsCount() || this.devSettings.getTotalPointsCount()}`
     }
 }
 
