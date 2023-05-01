@@ -4,12 +4,23 @@ import { GlobalSettings } from '../GlobalSettings';
 import { EventsController } from '../../controllers/EventsController';
 import { TilesArray } from '../../utils/TilesArray';
 import { DevSettings } from '../DevSettings';
+import { TilesHandlerModel } from './TilesHandlerModel';
+import { ResetModel } from './ResetModel';
+import { IResetBonus } from './IResetBonus';
 const { ccclass, property } = _decorator;
+
+type CheckedTile = {
+    status: boolean,
+    destroyedTilesList: { x: number, y: number }[]
+}
 
 @ccclass('ContainerModel')
 export class ContainerModel extends Component {
     @property({ type: EventsController })
     private eventsController: EventsController = null;
+
+    @property({ type: ResetModel })
+    private resetModel: IResetBonus = null;
 
     private size: number = 0;
 
@@ -26,80 +37,70 @@ export class ContainerModel extends Component {
         return this.tiles
     }
 
-    public handleTile(tileСoordinates: { x: number, y: number }): void {
-        const destroyedTilesList = this.getDestroyedTiles([tileСoordinates]);
-        if (destroyedTilesList.length > 1) {
-            this.resetTilesList(destroyedTilesList);
+    public handleTile(tileСoordinates: { x: number, y: number }) {
+        const checkedTile: CheckedTile = this.checkTile(tileСoordinates);
+        if (checkedTile.status) {
+            let destroyedTilesList: { x: number, y: number }[] = checkedTile.destroyedTilesList;
+            destroyedTilesList = new TilesArray(destroyedTilesList).largestToSmallestYSort();
+
+            destroyedTilesList.forEach((tileСoordinates: { x: number, y: number }) => {
+                this.tiles[tileСoordinates.x].splice(tileСoordinates.y, 1);
+                this.tiles[tileСoordinates.x].push(this.addNewTile());
+            });
             this.eventsController.getEventTarget().emit('onUpdate', destroyedTilesList, this.tiles);
             this.eventsController.getEventTarget().emit('onDestroyTiles', destroyedTilesList.length);
+
+            this.scheduleOnce(() => {
+                this.destroyableTilesCheck();
+            }, 1); 
         }
     }
 
-    private resetTilesList(destroyedTiles: { x: number, y: number }[]) {
-        destroyedTiles = new TilesArray(destroyedTiles).largestToSmallestYSort();
+    private checkTile(tileСoordinates: { x: number, y: number }): CheckedTile {
+        const tilesHandlerModel: TilesHandlerModel = new TilesHandlerModel(this.tiles);
+        const destroyedTilesList: { x: number, y: number }[] = tilesHandlerModel.getDestroyedTiles(tileСoordinates);
 
-        destroyedTiles.forEach((tileСoordinates: { x: number, y: number }) => {
-            this.tiles[tileСoordinates.x].splice(tileСoordinates.y, 1);
-            this.tiles[tileСoordinates.x].push(this.addNewTile());
+        if (destroyedTilesList.length > 1) {
+            return { status: true, destroyedTilesList }
+        }
+        return { status: false, destroyedTilesList }
+    }
+
+    public resetTiles(autoActuation?: boolean) {
+        if (this.resetModel.getAutoActuationsCount() <= 0 ) {
+            this.eventsController.getEventTarget().emit('onGameOver', false);
+            return
+        }
+        if (this.resetModel.getUsesCount() > 0) {
+            this.tiles = [];
+            this.initTiles();
+            this.eventsController.getEventTarget().emit('onReset', this.tiles);
+            this.resetModel.use();
+            if (autoActuation === true) {
+                this.resetModel.autoActuation();
+            }
+            this.scheduleOnce(() => {
+                this.destroyableTilesCheck();
+            }, 1); 
+        }
+        else if (autoActuation === true) {
+            this.eventsController.getEventTarget().emit('onGameOver', false);
+        }
+    }
+
+    public destroyableTilesCheck(): void {
+        let isDestroyable: boolean = false
+        this.tiles.forEach((tilesColumn: TileModel[], x) => {
+            for (let y = 0; y < tilesColumn.length; y++) {
+                if (this.checkTile({ x, y }).status) {
+                    isDestroyable = true
+                    return
+                }
+            }
         });
-    }
-
-    private getDestroyedTiles(checkingTiles: { x: number, y: number }[]): { x: number, y: number }[] {
-        const finishedTilesList: { x: number, y: number }[] = checkingTiles;
-        let newTiles: { x: number, y: number }[] = [];
-
-        checkingTiles.forEach((checkingTile: { x: number, y: number }) => {
-            const checkedTilesList = [
-                ...this.getVerticalSameTiles(checkingTile),
-                ...this.getHorisontalSameTiles(checkingTile),
-            ];
-            newTiles.push(...checkedTilesList.filter((checkedTile: { x: number, y: number }) => {
-                let isUnique: boolean = true;
-
-                (finishedTilesList.forEach((finishedTile: { x: number, y: number }) => {
-                    if (checkedTile.x === finishedTile.x && checkedTile.y === finishedTile.y) {
-                        isUnique = false;
-                    }
-                }));
-                return isUnique
-            }));
-        });
-        newTiles = new TilesArray(newTiles).getUniqueTiles();
-
-        if (newTiles.length > 0 && finishedTilesList.length < 20) {
-            return this.getDestroyedTiles([...finishedTilesList, ...newTiles]);
-        }
-        return finishedTilesList
-    }
-
-    private getVerticalSameTiles(tileСoordinates: { x: number, y: number }) {
-        const checkedTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y];
-        const topTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y + 1];
-        const bottomTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y - 1];
-
-        const sameTiles = [];
-        if (topTile && checkedTile.getId() === topTile.getId()) {
-            sameTiles.push({ x: tileСoordinates.x, y: tileСoordinates.y + 1 });
-        }
-        if (bottomTile && checkedTile.getId() === bottomTile.getId()) {
-            sameTiles.push({ x: tileСoordinates.x, y: tileСoordinates.y - 1 });
-        }
-        return sameTiles
-    }
-
-    private getHorisontalSameTiles(tileСoordinates: { x: number, y: number }) {
-        const checkedTile: TileModel = this.tiles[tileСoordinates.x][tileСoordinates.y];
-        const leftTile: TileModel = this.tiles[tileСoordinates.x - 1] && this.tiles[tileСoordinates.x - 1][tileСoordinates.y];
-        const rightTile: TileModel = this.tiles[tileСoordinates.x + 1] && this.tiles[tileСoordinates.x + 1][tileСoordinates.y];
-
-        const sameTiles: { x: number, y: number }[] = [];
-        if (rightTile && checkedTile.getId() === rightTile.getId()) {
-            sameTiles.push({ x: tileСoordinates.x + 1, y: tileСoordinates.y });
-        }
-        if (leftTile && checkedTile.getId() === leftTile.getId()) {
-            sameTiles.push({ x: tileСoordinates.x - 1, y: tileСoordinates.y });
-        }
-        return sameTiles
+        if (isDestroyable === false) {
+            this.resetTiles(true);
+        } 
     }
 
     private initTiles(): void {

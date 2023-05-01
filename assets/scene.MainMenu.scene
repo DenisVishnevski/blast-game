@@ -1441,6 +1441,7 @@
     "tilesContainerSize": 5,
     "clicksCount": 30,
     "totalPointsCount": 70,
+    "resetsCount": 3,
     "_id": "d8RalYzIFGjrob0SncBwos"
   },
   {
@@ -1499,6 +1500,7 @@
     "tilesContainerSize": 7,
     "clicksCount": 30,
     "totalPointsCount": 100,
+    "resetsCount": 2,
     "_id": "0fiueoDrJHDYVEztYmIPzK"
   },
   {
@@ -1557,6 +1559,7 @@
     "tilesContainerSize": 9,
     "clicksCount": 30,
     "totalPointsCount": 150,
+    "resetsCount": 1,
     "_id": "a8s9mNwDxOs5jIyi29hBpc"
   },
   {

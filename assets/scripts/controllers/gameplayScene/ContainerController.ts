@@ -18,6 +18,7 @@ export class ContainerController extends Component {
         eventTarget.on('onLoaded', this.setTiles, this);
         eventTarget.on('onTileClick', this.containerModel.handleTile, this.containerModel);
         eventTarget.on('onUpdate', this.container.updateTiles, this.container);
+        eventTarget.on('onReset', this.container.resetTiles, this.container);
     }
 
     private setTiles() {

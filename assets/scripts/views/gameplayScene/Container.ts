@@ -65,6 +65,16 @@ export class Container extends Component {
         this.scheduleOnce(this.unblockTilesForClick, .55);
     }
 
+    public resetTiles(tilesList: TileModel[][]): void {
+        this.blockTilesForClick();
+        
+        this.setSpritesToTiles(tilesList);
+        const tilesAnimation = new TilesAnimationsHandler();
+        tilesAnimation.resetAnimation(this.tiles);
+
+        this.scheduleOnce(this.unblockTilesForClick, .55);
+    }
+
     public async setSpritesToTiles(tilesList: TileModel[][]): Promise<void> {
         this.tiles.forEach((column: Tile[], x) => {
             column.forEach((tile: Tile, y) => {

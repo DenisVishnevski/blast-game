@@ -1,8 +1,10 @@
-export interface IDifficultySetting{
+export interface IDifficultySetting {
      getTilesContainerSize(): number;
 
-     getClicksCount(): number ;
+     getClicksCount(): number;
 
      getTotalPointsCount(): number;
+
+     getResetsCount(): number;
 }
 

@@ -25,6 +25,8 @@ export class mainMenuController extends Component {
         GlobalSettings.setTilesContainerSize(difficultyLevel.getTilesContainerSize());
         GlobalSettings.setClicksCount(difficultyLevel.getClicksCount());
         GlobalSettings.setTotalPointsCount(difficultyLevel.getTotalPointsCount());
+
+        GlobalSettings.setResetsCount(difficultyLevel.getResetsCount());
         director.loadScene('scene.gameplayScene');
     }
 }

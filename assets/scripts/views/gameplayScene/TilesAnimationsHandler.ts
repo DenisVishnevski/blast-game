@@ -2,10 +2,9 @@ import { Tile } from "./Tile";
 import { TileAnimations } from "./TileAnimations";
 
 export class TilesAnimationsHandler {
-
     private tilesСoordinates: { x: number, y: number }[];
 
-    constructor(tilesСoordinates: { x: number, y: number }[]) {
+    constructor(tilesСoordinates?: { x: number, y: number }[]) {
         this.tilesСoordinates = tilesСoordinates;
     }
 
@@ -40,6 +39,14 @@ export class TilesAnimationsHandler {
                     tileAnimations.destroyAnimation(this.tilesСoordinates.length);
                 }
             }
+        });
+    }
+
+    public resetAnimation(allTiles: Tile[][],) {
+        allTiles.forEach((column: Tile[], x) => {
+            column.forEach((tile: Tile, y) => {
+                tile.getComponent(TileAnimations).destroyAnimation(allTiles.length);
+            });
         });
     }
 }

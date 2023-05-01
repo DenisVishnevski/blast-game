@@ -13,6 +13,9 @@ export class DevSettings extends Component implements IDifficultySetting {
     @property
     private totalPointsCount: number = 0;
 
+    @property
+    private resetsCount: number = 0;
+
     public getTilesContainerSize(): number {
         return this.tilesContainerSize
     }
@@ -23,6 +26,10 @@ export class DevSettings extends Component implements IDifficultySetting {
 
     public getTotalPointsCount(): number {
         return this.totalPointsCount
+    }
+
+    public getResetsCount(): number {
+        return this.resetsCount
     }
 }
 

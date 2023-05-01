@@ -13,6 +13,9 @@ export class DifficultySettingModel extends Component implements IDifficultySett
     @property
     private totalPointsCount: number = 0;
 
+    @property
+    private resetsCount: number = 0;
+
     public getTilesContainerSize(): number {
         return this.tilesContainerSize
     }
@@ -25,5 +28,8 @@ export class DifficultySettingModel extends Component implements IDifficultySett
         return this.totalPointsCount
     }
 
+    public getResetsCount(): number {
+        return this.resetsCount
+    }
 }
 

@@ -7,6 +7,8 @@ export class GlobalSettings extends Component {
     private static clicksCount: number = 0;
     private static totalPointsCount: number = 0
 
+    private static resetsCount: number = 0
+
     public static getTilesContainerSize(): number {
         return GlobalSettings.tilesContainerSize
     }
@@ -29,6 +31,14 @@ export class GlobalSettings extends Component {
 
     public static setTotalPointsCount(totalPointsCount: number): void {
         this.totalPointsCount = totalPointsCount;
+    }
+
+    public static getResetsCount(): number {
+        return GlobalSettings.resetsCount
+    }
+
+    public static setResetsCount(resetsCount: number): void {
+        this.resetsCount = resetsCount;
     }
 }
 
