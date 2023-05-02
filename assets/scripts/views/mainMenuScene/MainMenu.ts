@@ -1,6 +1,6 @@
 import { _decorator, Component, Node } from 'cc';
 import { DifficultySetting } from './DifficultySetting';
-import { IDifficultySetting } from '../../models/IDifficultySetting';
+import { GameSettings } from '../../models/GameSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('MainMenu')
@@ -11,8 +11,8 @@ export class MainMenu extends Component {
     @property({type: Node})
     private difficultySelectionMenu: Node = null;
 
-    public initDifficultySettingsButton(difficultyLevels: IDifficultySetting[]): void {
-        difficultyLevels.forEach((difficultyLevel: IDifficultySetting, index) => {
+    public initDifficultySettingsButton(difficultyLevels: GameSettings[]): void {
+        difficultyLevels.forEach((difficultyLevel: GameSettings, index) => {
             const difficultySelectionMenu = this.node.getChildByName('DifficultySelectionMenu');
             const difficultySetting = difficultySelectionMenu.getChildByName('DifficultySettingButton-' + index.toString());
 

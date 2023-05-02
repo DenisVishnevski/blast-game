@@ -1,9 +1,8 @@
 import { _decorator, Component, Node } from 'cc';
-import { IDifficultySetting } from './IDifficultySetting';
 const { ccclass, property } = _decorator;
 
-@ccclass('DevSettings')
-export class DevSettings extends Component implements IDifficultySetting {
+@ccclass('GameSettings')
+export class GameSettings extends Component {
     @property
     private tilesContainerSize: number = 0;
 

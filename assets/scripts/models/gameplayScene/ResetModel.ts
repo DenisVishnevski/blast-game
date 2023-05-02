@@ -1,14 +1,13 @@
 import { _decorator, Component, Node } from 'cc';
 import { EventsController } from '../../controllers/EventsController';
 import { GlobalSettings } from '../GlobalSettings';
-import { DevSettings } from '../DevSettings';
-import { IDifficultySetting } from '../IDifficultySetting';
+import { GameSettings } from '../GameSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('ResetModel')
 export class ResetModel extends Component {
-    @property({ type: DevSettings })
-    private devSettings: IDifficultySetting = null;
+    @property({ type: GameSettings })
+    private devSettings: GameSettings = null;
 
     @property({ type: EventsController })
     private eventsController: EventsController = null;

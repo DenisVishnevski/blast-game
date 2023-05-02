@@ -1,19 +1,18 @@
 import { _decorator, Component, Node } from 'cc';
-import { IDifficultySetting } from '../IDifficultySetting';
-import { DifficultySettingModel } from './DifficultySettingModel';
+import { GameSettings } from '../GameSettings';
 const { ccclass, property } = _decorator;
 @ccclass('MainMenuModel')
 export class MainMenuModel extends Component {
-    @property({type: DifficultySettingModel})
-    private easyDifficultyLevel: IDifficultySetting = null
+    @property({type: GameSettings})
+    private easyDifficultyLevel: GameSettings = null
 
-    @property({type: DifficultySettingModel})
-    private mediumDifficultyLevel: IDifficultySetting = null
+    @property({type: GameSettings})
+    private mediumDifficultyLevel: GameSettings = null
 
-    @property({type: DifficultySettingModel})
-    private hardDifficultyLevel: IDifficultySetting = null
+    @property({type: GameSettings})
+    private hardDifficultyLevel: GameSettings = null
 
-    public getDifficultyLevelsList(): IDifficultySetting[] {
+    public getDifficultyLevelsList(): GameSettings[] {
         return [this.easyDifficultyLevel, this.mediumDifficultyLevel, this.hardDifficultyLevel]
     }
 }

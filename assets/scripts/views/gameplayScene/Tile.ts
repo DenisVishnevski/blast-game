@@ -1,4 +1,4 @@
-import { _decorator, Component, find, Node, Size, Sprite } from 'cc';
+import { _decorator, Component, find, Node, Sprite, SpriteFrame } from 'cc';
 import { EventsController } from '../../controllers/EventsController';
 import { TilesSpritesList } from './TilesSpritesList';
 const { ccclass, property } = _decorator;
@@ -7,6 +7,8 @@ const { ccclass, property } = _decorator;
 export class Tile extends Component {
     protected static height: number;
     private eventsController: EventsController;
+
+    public sprite: SpriteFrame = null;
     private coordinates: { x: number, y: number } = {
         x: 0,
         y: 0
@@ -27,9 +29,11 @@ export class Tile extends Component {
 
     public setSprite(spritesId: number): void {
         const spritesList = find('View/Canvas/TilesSpritesList').getComponent(TilesSpritesList);
-
+        const newSprite = spritesList.getSpritesList()[spritesId];
         try {
-            this.node.getComponent(Sprite).spriteFrame = spritesList.getSpritesList()[spritesId];
+            this.node.getComponent(Sprite).spriteFrame = newSprite;
+            this.sprite = newSprite;
+            
         } catch (error) {
             console.error(error);
         }

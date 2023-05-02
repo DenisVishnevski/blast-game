@@ -3,7 +3,7 @@ import { MainMenuModel } from '../../models/mainMenuScene/MainMenuModel';
 import { MainMenu } from '../../views/mainMenuScene/MainMenu';
 import { EventsController } from '../EventsController';
 import { GlobalSettings } from '../../models/GlobalSettings';
-import { IDifficultySetting } from '../../models/IDifficultySetting';
+import { GameSettings } from '../../models/GameSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('mainMenuController')
@@ -21,7 +21,7 @@ export class mainMenuController extends Component {
         this.mainMenu.initDifficultySettingsButton(this.mainMenuModel.getDifficultyLevelsList());
     }
 
-    private startGame(difficultyLevel: IDifficultySetting): void {
+    private startGame(difficultyLevel: GameSettings): void {
         GlobalSettings.setTilesContainerSize(difficultyLevel.getTilesContainerSize());
         GlobalSettings.setClicksCount(difficultyLevel.getClicksCount());
         GlobalSettings.setTotalPointsCount(difficultyLevel.getTotalPointsCount());

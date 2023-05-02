@@ -5,13 +5,12 @@ import { TilesArray } from '../../utils/TilesArray';
 import { Tile } from './Tile';
 import { TilesAnimationsHandler } from './TilesAnimationsHandler';
 import { TileModel } from '../../models/gameplayScene/TileModel';
-import { DevSettings } from '../../models/DevSettings';
-import { IDifficultySetting } from '../../models/IDifficultySetting';
+import { GameSettings } from '../../models/GameSettings';
 const { ccclass, property } = _decorator;
 @ccclass('Container')
 export class Container extends Component {
-    @property({ type: DevSettings })
-    private devSettings: IDifficultySetting = null;
+    @property({ type: GameSettings })
+    private devSettings: GameSettings = null;
 
     @property({ type: Prefab })
     private tilePrefab: Prefab = null;
@@ -22,6 +21,8 @@ export class Container extends Component {
     @property({ type: Button })
     private blockPanel: Button = null;
 
+    private tilesAnimation: TilesAnimationsHandler;
+
     private size: number = 0;
 
     private tiles: Tile[][] = [];
@@ -31,6 +32,7 @@ export class Container extends Component {
 
     protected async start(): Promise<void> {
         this.size = GlobalSettings.getTilesContainerSize() || this.devSettings.getTilesContainerSize();
+        this.tilesAnimation = this.getComponent(TilesAnimationsHandler);
 
         await this.setTilesSize();
         await this.initTiles();
@@ -41,6 +43,8 @@ export class Container extends Component {
 
     public updateTiles(destroyedTiles: { x: number, y: number }[], tilesList: TileModel[][]) {
         this.blockTilesForClick();
+
+        this.tilesAnimation.destroyAnimation(new TilesArray(destroyedTiles).getTilesByСoordinates(this.tiles));
         this.tiles.forEach((tilesColumn: Tile[], x) => {
             tilesColumn.forEach((tile: Tile, y) => {
                 let minY: number = this.size;
@@ -56,9 +60,7 @@ export class Container extends Component {
                     }
                 });
                 rawDestroyedTiles = new TilesArray(rawDestroyedTiles).smallestToLargestYSort();
-
-                const tilesAnimation = new TilesAnimationsHandler(rawDestroyedTiles);
-                tilesAnimation.destroyAnimation(tile, y, minY)
+                this.tilesAnimation.fallingAnimation(rawDestroyedTiles, tile, y, minY)
             });
 
         });
@@ -67,10 +69,9 @@ export class Container extends Component {
 
     public resetTiles(tilesList: TileModel[][]): void {
         this.blockTilesForClick();
-        
-        this.setSpritesToTiles(tilesList);
         const tilesAnimation = new TilesAnimationsHandler();
         tilesAnimation.resetAnimation(this.tiles);
+        this.setSpritesToTiles(tilesList);
 
         this.scheduleOnce(this.unblockTilesForClick, .55);
     }

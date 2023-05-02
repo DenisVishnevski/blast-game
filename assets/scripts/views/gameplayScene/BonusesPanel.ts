@@ -1,13 +1,12 @@
 import { _decorator, Component, Label, Node } from 'cc';
 import { GlobalSettings } from '../../models/GlobalSettings';
-import { DevSettings } from '../../models/DevSettings';
-import { IDifficultySetting } from '../../models/IDifficultySetting';
+import { GameSettings } from '../../models/GameSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('BonusesPanel')
 export class BonusesPanel extends Component {
-    @property({ type: DevSettings })
-    private devSettings: IDifficultySetting = null;
+    @property({ type: GameSettings })
+    private devSettings: GameSettings = null;
 
     @property({ type: Label})
     private resetsCounter: Label = null;

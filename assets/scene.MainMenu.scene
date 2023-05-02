@@ -1430,7 +1430,7 @@
     "_id": "37b2Cqy7pJ/qCOF3hPaneS"
   },
   {
-    "__type__": "b74b1/O9cNPSogxwbNbVnHT",
+    "__type__": "e8b7dKQp8VMOLw4N1oInTWz",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1442,7 +1442,7 @@
     "clicksCount": 30,
     "totalPointsCount": 70,
     "resetsCount": 3,
-    "_id": "d8RalYzIFGjrob0SncBwos"
+    "_id": "b3S9LKN91AnKFc8cs9x3Fa"
   },
   {
     "__type__": "cc.Node",
@@ -1489,7 +1489,7 @@
     "_id": "31eUXMYuJOuIa8t2EgGXva"
   },
   {
-    "__type__": "b74b1/O9cNPSogxwbNbVnHT",
+    "__type__": "e8b7dKQp8VMOLw4N1oInTWz",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1501,7 +1501,7 @@
     "clicksCount": 30,
     "totalPointsCount": 100,
     "resetsCount": 2,
-    "_id": "0fiueoDrJHDYVEztYmIPzK"
+    "_id": "d6Hjw8+O9ET5qhEaxSSBv2"
   },
   {
     "__type__": "cc.Node",
@@ -1548,7 +1548,7 @@
     "_id": "45oxkvjD9GHIvS5KimxyF2"
   },
   {
-    "__type__": "b74b1/O9cNPSogxwbNbVnHT",
+    "__type__": "e8b7dKQp8VMOLw4N1oInTWz",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1560,7 +1560,7 @@
     "clicksCount": 30,
     "totalPointsCount": 150,
     "resetsCount": 1,
-    "_id": "a8s9mNwDxOs5jIyi29hBpc"
+    "_id": "29fErOTslMLYiHlK23YaKV"
   },
   {
     "__type__": "cf5e4IFBHtPgYQfR751INQR",

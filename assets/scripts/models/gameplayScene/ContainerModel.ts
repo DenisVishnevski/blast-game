@@ -3,10 +3,10 @@ import { TileModel } from './TileModel';
 import { GlobalSettings } from '../GlobalSettings';
 import { EventsController } from '../../controllers/EventsController';
 import { TilesArray } from '../../utils/TilesArray';
-import { DevSettings } from '../DevSettings';
 import { TilesHandlerModel } from './TilesHandlerModel';
 import { ResetModel } from './ResetModel';
 import { IResetBonus } from './IResetBonus';
+import { GameSettings } from '../GameSettings';
 const { ccclass, property } = _decorator;
 
 type CheckedTile = {
@@ -29,7 +29,7 @@ export class ContainerModel extends Component {
 
     protected start(): void {
         this.size = GlobalSettings.getTilesContainerSize()
-            || this.getComponent(DevSettings).getTilesContainerSize();
+            || this.getComponent(GameSettings).getTilesContainerSize();
         this.initTiles();
     }
 

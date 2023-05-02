@@ -1,3 +1,5 @@
+import { Tile } from "../views/gameplayScene/Tile";
+
 export class TilesArray {
     private tilesСoordinates: { x: number, y: number }[];
 
@@ -32,6 +34,14 @@ export class TilesArray {
             );
             return isUnique ? accumulator : [...accumulator, current]
         }, []);
+    }
+
+    public getTilesByСoordinates(allTiles: Tile[][]): Tile[] {
+        const tilesList: Tile[] = [];
+        this.tilesСoordinates.forEach((tileСoordinates: { x: number, y: number }) => {
+            tilesList.push(allTiles[tileСoordinates.x][tileСoordinates.y]);
+        });
+        return tilesList
     }
 }
 

@@ -56,7 +56,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 111
+      "__id__": 112
     },
     "_id": "e639dfad-2213-4e1a-8a30-5e734e83fcee"
   },
@@ -128,13 +128,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 108
-      },
-      {
         "__id__": 109
       },
       {
         "__id__": 110
+      },
+      {
+        "__id__": 111
       }
     ],
     "_prefab": null,
@@ -903,7 +903,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 107
+        "__id__": 108
       }
     ],
     "_prefab": null,
@@ -957,6 +957,9 @@
       },
       {
         "__id__": 29
+      },
+      {
+        "__id__": 107
       }
     ],
     "_prefab": null,
@@ -3683,6 +3686,21 @@
     "_id": "35PqvmY3ZK+J1uG4veDzi9"
   },
   {
+    "__type__": "5198fPkgcNID5uMVx3A+X7y",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 25
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "devSettings": {
+      "__id__": 30
+    },
+    "tilesFallingHeight": 2,
+    "_id": "247oyPilxO+77jZLiaq69H"
+  },
+  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -3771,22 +3789,22 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 112
-    },
-    "shadows": {
       "__id__": 113
     },
-    "_skybox": {
+    "shadows": {
       "__id__": 114
     },
-    "fog": {
+    "_skybox": {
       "__id__": 115
     },
-    "octree": {
+    "fog": {
       "__id__": 116
     },
-    "lightProbeInfo": {
+    "octree": {
       "__id__": 117
+    },
+    "lightProbeInfo": {
+      "__id__": 118
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false

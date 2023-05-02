@@ -1,19 +1,19 @@
 import { _decorator, Component, find, Label, Node } from 'cc';
 import { EventsController } from '../../controllers/EventsController';
-import { IDifficultySetting } from '../../models/IDifficultySetting';
+import { GameSettings } from '../../models/GameSettings';
 const { ccclass, property } = _decorator;
 
 @ccclass('DifficultySetting')
 export class DifficultySetting extends Component {
     private eventsController: EventsController;
 
-    private difficultyLevel: IDifficultySetting;;
+    private difficultyLevel: GameSettings;;
 
     protected start(): void {
         this.eventsController = find('Controller').getComponent(EventsController);
     }
 
-    public setValue(difficultyLevel: IDifficultySetting): void {
+    public setValue(difficultyLevel: GameSettings): void {
         this.difficultyLevel = difficultyLevel;
         this.displayValue();
     }

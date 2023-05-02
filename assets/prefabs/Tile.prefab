@@ -234,6 +234,10 @@
     "__prefab": {
       "__id__": 12
     },
+    "destroyEffect": {
+      "__uuid__": "fd86d924-b909-4d06-9ed1-e13097a539ef",
+      "__expectedType__": "cc.Prefab"
+    },
     "fallingSpeed": 7,
     "accelerationFactor": 0.2,
     "pauseTimeBeforeFalling": 0.2,
