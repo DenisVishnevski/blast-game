@@ -1,11 +1,12 @@
 import { _decorator, Component, Node } from 'cc';
-import { EventsController } from '../../controllers/EventsController';
-import { GlobalSettings } from '../GlobalSettings';
-import { GameSettings } from '../GameSettings';
+import { GameSettings } from '../../GameSettings';
+import { EventsController } from '../../../controllers/EventsController';
+import { GlobalSettings } from '../../GlobalSettings';
+import { IResetBonus } from './IResetBonus';
 const { ccclass, property } = _decorator;
 
 @ccclass('ResetModel')
-export class ResetModel extends Component {
+export class ResetModel extends Component implements IResetBonus {
     @property({ type: GameSettings })
     private devSettings: GameSettings = null;
 

@@ -12,7 +12,7 @@ export class ContainerController extends Component {
     @property({ type: ContainerModel })
     private containerModel: ContainerModel = null;
 
-    protected start(): void {
+    protected onLoad(): void {
         const eventTarget = this.getComponent(EventsController).getEventTarget();
 
         eventTarget.on('onLoaded', this.setTiles, this);

@@ -7,38 +7,47 @@ export class GlobalSettings extends Component {
     private static clicksCount: number = 0;
     private static totalPointsCount: number = 0
 
+    private static bombsCount: number = 0
     private static resetsCount: number = 0
 
     public static getTilesContainerSize(): number {
         return GlobalSettings.tilesContainerSize
     }
 
-    public static setTilesContainerSize(tilesContainerSize: number): void {
-        this.tilesContainerSize = tilesContainerSize;
+    public static setTilesContainerSize(count: number): void {
+        this.tilesContainerSize = count;
     }
 
     public static getClicksCount(): number {
         return GlobalSettings.clicksCount
     }
 
-    public static setClicksCount(clicksCount: number): void {
-        this.clicksCount = clicksCount;
+    public static setClicksCount(count: number): void {
+        this.clicksCount = count;
     }
 
     public static getTotalPointsCount(): number {
         return GlobalSettings.totalPointsCount
     }
 
-    public static setTotalPointsCount(totalPointsCount: number): void {
-        this.totalPointsCount = totalPointsCount;
+    public static setTotalPointsCount(count: number): void {
+        this.totalPointsCount = count;
+    }
+
+    public static getBombsCount(): number {
+        return this.bombsCount
+    }
+
+    public static setBombsCount(count: number): void {
+        this.bombsCount = count;
     }
 
     public static getResetsCount(): number {
         return GlobalSettings.resetsCount
     }
 
-    public static setResetsCount(resetsCount: number): void {
-        this.resetsCount = resetsCount;
+    public static setResetsCount(count: number): void {
+        this.resetsCount = count;
     }
 }
 

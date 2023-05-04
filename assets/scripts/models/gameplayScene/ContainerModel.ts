@@ -4,9 +4,9 @@ import { GlobalSettings } from '../GlobalSettings';
 import { EventsController } from '../../controllers/EventsController';
 import { TilesArray } from '../../utils/TilesArray';
 import { TilesHandlerModel } from './TilesHandlerModel';
-import { ResetModel } from './ResetModel';
-import { IResetBonus } from './IResetBonus';
 import { GameSettings } from '../GameSettings';
+import { ResetModel } from './bonuses/ResetModel';
+import { IResetBonus } from './bonuses/IResetBonus';
 const { ccclass, property } = _decorator;
 
 type CheckedTile = {
@@ -35,6 +35,10 @@ export class ContainerModel extends Component {
 
     public getTiles() {
         return this.tiles
+    }
+
+    public setTiles(tiles: TileModel[][]) {
+        this.tiles = tiles;
     }
 
     public handleTile(tileСoordinates: { x: number, y: number }) {
@@ -67,7 +71,7 @@ export class ContainerModel extends Component {
     }
 
     public resetTiles(autoActuation?: boolean) {
-        if (this.resetModel.getAutoActuationsCount() <= 0 ) {
+        if (this.resetModel.getAutoActuationsCount() <= 0 && autoActuation === true) {
             this.eventsController.getEventTarget().emit('onGameOver', false);
             return
         }
@@ -114,7 +118,7 @@ export class ContainerModel extends Component {
         }
     }
 
-    private addNewTile() {
+    public addNewTile() {
         const newTile: TileModel = new TileModel();
         newTile.setId(this.getRandomNumber());
         return newTile
