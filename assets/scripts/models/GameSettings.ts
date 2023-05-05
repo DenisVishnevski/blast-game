@@ -16,6 +16,9 @@ export class GameSettings extends Component {
     private bombsCount: number = 0;
 
     @property
+    private teleportsCount: number = 0;
+
+    @property
     private resetsCount: number = 0;
 
     public getTilesContainerSize(): number {
@@ -32,6 +35,10 @@ export class GameSettings extends Component {
 
     public getBombsCount(): number {
         return this.bombsCount
+    }
+
+    public getTeleportsCount(): number {
+        return this.teleportsCount
     }
 
     public getResetsCount(): number {

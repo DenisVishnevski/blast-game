@@ -67,6 +67,13 @@ export class Container extends Component {
         this.scheduleOnce(this.unblockTilesForClick, .55);
     }
 
+    public quickUpdate(changedTiles: { x: number, y: number }[], tilesList: TileModel[][]): void {
+        this.tilesAnimation.destroyAnimation(new TilesArray(changedTiles).getTilesByСoordinates(this.tiles));
+        changedTiles.forEach((changedTile: { x: number, y: number }) => {
+            this.tiles[changedTile.x][changedTile.y].setSprite(tilesList[changedTile.x][changedTile.y].getId());
+        });
+    }
+
     public resetTiles(tilesList: TileModel[][]): void {
         this.blockTilesForClick();
         const tilesAnimation = new TilesAnimationsHandler();

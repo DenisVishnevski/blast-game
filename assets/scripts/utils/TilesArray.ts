@@ -43,5 +43,17 @@ export class TilesArray {
         });
         return tilesList
     }
+
+    public addCoordinatesAround(tileСoordinates: { x: number, y: number }, counter: number) {
+        const newCoordinatesList = [tileСoordinates];
+        if (counter > 0) {
+            for (let index = -1; index <= 1; index++) {
+                newCoordinatesList.push(...this.addCoordinatesAround({ x: tileСoordinates.x + index, y: tileСoordinates.y }, counter - 1));
+                newCoordinatesList.push(...this.addCoordinatesAround({ x: tileСoordinates.x, y: tileСoordinates.y + index }, counter - 1));
+            }
+        }
+        this.tilesСoordinates = newCoordinatesList;
+        return newCoordinatesList
+    }
 }
 

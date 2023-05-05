@@ -1,35 +1,31 @@
 import { _decorator, Component, Node } from 'cc';
-import { IBonus } from './IBonus';
-import { GlobalSettings } from '../../GlobalSettings';
 import { GameSettings } from '../../GameSettings';
 import { EventsController } from '../../../controllers/EventsController';
-import { IBombBonus } from './IBombBonus';
+import { GlobalSettings } from '../../GlobalSettings';
+import { ITeleportBonus } from './ITeleportBonus';
 const { ccclass, property } = _decorator;
 
-@ccclass('BombModel')
-export class BombModel extends Component implements IBombBonus {
+@ccclass('TeleportModel')
+export class TeleportModel extends Component implements ITeleportBonus {
     @property({ type: GameSettings })
     private devSettings: GameSettings = null;
 
     @property({ type: EventsController })
     private eventsController: EventsController = null;
 
-    @property
-    private range: number = 0
-
     private usesCount : number = 0;
 
     protected start(): void {
-        this.usesCount = GlobalSettings.getBombsCount() || this.devSettings.getBombsCount();
+        this.usesCount = GlobalSettings.getTeleportsCount() || this.devSettings.getTeleportsCount();
     }
 
     public use(): void {
         this.usesCount--;
-        this.eventsController.getEventTarget().emit('onUseBomb', this.usesCount);
+        this.eventsController.getEventTarget().emit('onUseTeleport', this.usesCount);
     }
 
-    public getRange(): number {
-        return this.range
+    public selectTile(tileId: number): void {
+        this.eventsController.getEventTarget().emit('onSelectTile', tileId);
     }
 
     public getUsesCount(): number {

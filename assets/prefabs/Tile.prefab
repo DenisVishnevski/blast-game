@@ -239,7 +239,7 @@
       "__expectedType__": "cc.Prefab"
     },
     "fallingSpeed": 7,
-    "accelerationFactor": 0.2,
+    "accelerationFactor": 0.15,
     "pauseTimeBeforeFalling": 0.2,
     "_id": ""
   },
