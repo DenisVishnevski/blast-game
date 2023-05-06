@@ -28,8 +28,8 @@ export class TilesArray {
     }
 
     public getUniqueTiles(): { x: number, y: number }[] {
-        return this.tilesСoordinates.reduce((accumulator, current) => {
-            const isUnique: boolean = accumulator.find((find: { x: number, y: number }) =>
+        return this.tilesСoordinates.reduce((accumulator: { x: number, y: number }[], current: { x: number, y: number }) => {
+            const isUnique = accumulator.find((find: { x: number, y: number }) =>
                 find.x === current.x && find.y === current.y
             );
             return isUnique ? accumulator : [...accumulator, current]

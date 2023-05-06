@@ -3,11 +3,12 @@ import { Tile } from "./Tile";
 import { TileAnimations } from "./TileAnimations";
 import { GameSettings } from "../../models/GameSettings";
 import { GlobalSettings } from "../../models/GlobalSettings";
+import { ErrorMessage } from "../../utils/ErrorMessage";
 const { ccclass, property } = _decorator;
 @ccclass('TilesAnimationsHandler')
 export class TilesAnimationsHandler extends Component {
     @property({ type: GameSettings })
-    private devSettings: GameSettings = null;
+    private devSettings: GameSettings | null = null;
 
     @property
     private tilesFallingHeight: number = 0;
@@ -15,6 +16,9 @@ export class TilesAnimationsHandler extends Component {
     private containerSize: number = 0;
 
     protected start(): void {
+        if (this.devSettings === null) {
+            throw new ErrorMessage('GameSettings').notDefined
+        } 
         this.containerSize = GlobalSettings.getTilesContainerSize() || this.devSettings.getTilesContainerSize();
     }
 
@@ -41,6 +45,8 @@ export class TilesAnimationsHandler extends Component {
             }
 
             const tileAnimations = tile.getComponent(TileAnimations);
+            if (tileAnimations === null) throw new ErrorMessage('TileAnimations').notAdded
+
             if (coordinateY >= minCoordinateY) {
                 if (coordinateY < separatedTileY - 1) {
                     tileAnimations.fallingAnimation(tilesСoordinates.length - (tilesСoordinates.length - beforeSeparateTilesY));
@@ -57,15 +63,21 @@ export class TilesAnimationsHandler extends Component {
 
     public destroyAnimation(tiles: Tile[]): void {
         tiles.forEach((tile: Tile) => {
-            tile.getComponent(TileAnimations).destroyAnimation();
+            const tileAnimations = tile.getComponent(TileAnimations);
+            if (tileAnimations === null) throw new ErrorMessage('TileAnimations').notAdded
+
+            tileAnimations.destroyAnimation();
         });
     }
 
     public resetAnimation(allTiles: Tile[][],) {
         allTiles.forEach((column: Tile[], x) => {
             column.forEach((tile: Tile, y) => {
-                tile.getComponent(TileAnimations).destroyAnimation();
-                tile.getComponent(TileAnimations).fallingAnimation(allTiles.length);
+                const tileAnimations = tile.getComponent(TileAnimations);
+                if (tileAnimations === null) throw new ErrorMessage('TileAnimations').notAdded
+
+                tileAnimations.destroyAnimation();
+                tileAnimations.fallingAnimation(allTiles.length);
             });
         });
     }

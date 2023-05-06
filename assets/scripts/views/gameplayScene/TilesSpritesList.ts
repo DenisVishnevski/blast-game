@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame } from 'cc';
+import { ErrorMessage } from '../../utils/ErrorMessage';
 const { ccclass, property } = _decorator;
 
 @ccclass('TilesSpritesList')
@@ -22,10 +23,16 @@ export class TilesSpritesList extends Component {
     private async initSprites(): Promise<void> {
         let counter = 0;
         while (true) {
-            const newSprite = this.node.getChildByName(counter.toString());
+            const newSpriteNode = this.node.getChildByName(counter.toString());
 
-            if (newSprite) {
-                this.spritesList.push(newSprite.getComponent(Sprite).spriteFrame);
+            if (newSpriteNode) {
+                const newSprite = newSpriteNode.getComponent(Sprite);
+                if (newSprite === null) throw new ErrorMessage('Sprite').notAdded
+
+                const newSpriteFrame = newSprite.spriteFrame;
+                if (newSpriteFrame === null) throw new Error('The Sprite component does not have a sprite frame');
+
+                this.spritesList.push(newSpriteFrame);
                 counter++;
             }
             else {

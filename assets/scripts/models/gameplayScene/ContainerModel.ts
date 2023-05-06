@@ -7,6 +7,7 @@ import { TilesHandlerModel } from './TilesHandlerModel';
 import { GameSettings } from '../GameSettings';
 import { ResetModel } from './bonuses/ResetModel';
 import { IResetBonus } from './bonuses/IResetBonus';
+import { ErrorMessage } from '../../utils/ErrorMessage';
 const { ccclass, property } = _decorator;
 
 type CheckedTile = {
@@ -17,10 +18,10 @@ type CheckedTile = {
 @ccclass('ContainerModel')
 export class ContainerModel extends Component {
     @property({ type: EventsController })
-    private eventsController: EventsController = null;
+    private eventsController: EventsController | null = null;
 
     @property({ type: ResetModel })
-    private resetModel: IResetBonus = null;
+    private resetModel: IResetBonus | null = null;
 
     private size: number = 0;
 
@@ -28,8 +29,13 @@ export class ContainerModel extends Component {
     private tiles: TileModel[][] = [];
 
     protected start(): void {
+        const gameSettings: GameSettings | null = this.getComponent(GameSettings);
+        if (gameSettings === null) {
+            throw new ErrorMessage('GameSettings').notAdded
+        } 
+
         this.size = GlobalSettings.getTilesContainerSize()
-            || this.getComponent(GameSettings).getTilesContainerSize();
+            || gameSettings.getTilesContainerSize();
         this.initTiles();
     }
 
@@ -51,6 +57,10 @@ export class ContainerModel extends Component {
                 this.tiles[tileСoordinates.x].splice(tileСoordinates.y, 1);
                 this.tiles[tileСoordinates.x].push(this.addNewTile());
             });
+
+            if (this.eventsController === null) {
+                throw new ErrorMessage('EventsController').notDefined
+            } 
             this.eventsController.getEventTarget().emit('onUpdate', destroyedTilesList, this.tiles);
             this.eventsController.getEventTarget().emit('onDestroyTiles', destroyedTilesList.length);
 
@@ -71,6 +81,13 @@ export class ContainerModel extends Component {
     }
 
     public resetTiles(autoActuation?: boolean) {
+        if (this.resetModel === null) {
+            throw new ErrorMessage('ResetModel').notDefined
+        } 
+        if (this.eventsController === null) {
+            throw new ErrorMessage('EventsController').notDefined
+        } 
+        
         if (this.resetModel.getAutoActuationsCount() <= 0 && autoActuation === true) {
             this.eventsController.getEventTarget().emit('onGameOver', false);
             return

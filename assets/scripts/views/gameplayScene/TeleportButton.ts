@@ -4,26 +4,27 @@ import { BonusesPanel } from './BonusesPanel';
 import { DragAndDropLogic } from './DragAndDropLogic';
 import { Tile } from './Tile';
 import { TilesSpritesList } from './TilesSpritesList';
+import { ErrorMessage } from '../../utils/ErrorMessage';
 const { ccclass, property } = _decorator;
 
 @ccclass('TeleportButton')
 export class TeleportButton extends Component {
     @property({ type: BonusesController })
-    private bonusesController: BonusesController = null;
+    private bonusesController: BonusesController | null = null;
 
     @property({ type: BonusesPanel })
-    private bonusesPanel: BonusesPanel = null;
+    private bonusesPanel: BonusesPanel | null = null;
 
     @property({ type: Node })
-    private canvas: Node = null;
+    private canvas: Node | null = null;
 
     @property({ type: TilesSpritesList })
-    private tilesSpritesList: TilesSpritesList = null;
+    private tilesSpritesList: TilesSpritesList | null = null;
 
     @property({ type: Sprite })
-    private tileIcon: Sprite = null;
+    private tileIcon: Sprite | null = null;
 
-    private dragAndDropLogic: DragAndDropLogic = null;
+    private dragAndDropLogic: DragAndDropLogic | null = null;
     private isDroped: boolean = true;
 
     protected onLoad(): void {
@@ -31,21 +32,30 @@ export class TeleportButton extends Component {
     }
 
     public displayTile(tileId: number): void {
+        if (this.tileIcon === null) throw new ErrorMessage('Sprite').notDefined
+        if (this.tilesSpritesList === null) throw new ErrorMessage('TilesSpritesList').notDefined
+
         this.tileIcon.enabled = true;
         this.tileIcon.spriteFrame = this.tilesSpritesList.getSpritesList()[tileId];
     }
 
     private hideTile(): void {
+        if (this.tileIcon === null) throw new ErrorMessage('Sprite').notDefined
         this.tileIcon.enabled = false;
     }
 
     private takeTeleport(): void {
+        if (this.bonusesPanel === null) throw new ErrorMessage('BonusesPanel').notDefined
+        if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
+        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
+
         if (this.bonusesPanel.getTeleportsCount() > 0 && this.isDroped) {
             this.isDroped = false;
             this.dragAndDropLogic.drag();
             this.bonusesController.useTeleport();
 
             this.scheduleOnce(() => {
+                if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
                 this.canvas.on(Input.EventType.MOUSE_UP, this.dropTeleportHandler, this);
             }, .2)
         }
@@ -60,6 +70,11 @@ export class TeleportButton extends Component {
     }
 
     public dropTeleport(): void {
+        if (this.bonusesPanel === null) throw new ErrorMessage('BonusesPanel').notDefined
+        if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
+        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
+        if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
+
         this.isDroped = true;
         this.hideTile();
         this.bonusesController.cancelTeleport()
