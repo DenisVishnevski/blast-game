@@ -63,10 +63,7 @@ export class ContainerModel extends Component {
             } 
             this.eventsController.getEventTarget().emit('onUpdate', destroyedTilesList, this.tiles);
             this.eventsController.getEventTarget().emit('onDestroyTiles', destroyedTilesList.length);
-
-            this.scheduleOnce(() => {
-                this.destroyableTilesCheck();
-            }, 1); 
+            this.eventsController.getEventTarget().emit('onNeedDestroyableTilesCheck');
         }
     }
 
@@ -100,9 +97,7 @@ export class ContainerModel extends Component {
             if (autoActuation === true) {
                 this.resetModel.autoActuation();
             }
-            this.scheduleOnce(() => {
-                this.destroyableTilesCheck();
-            }, 1); 
+            this.eventsController.getEventTarget().emit('onNeedDestroyableTilesCheck');
         }
         else if (autoActuation === true) {
             this.eventsController.getEventTarget().emit('onGameOver', false);
@@ -122,6 +117,12 @@ export class ContainerModel extends Component {
         if (isDestroyable === false) {
             this.resetTiles(true);
         } 
+        else {
+            if (this.resetModel === null) {
+                throw new ErrorMessage('ResetModel').notDefined
+            } 
+            this.resetModel.restoreAutoActuationsCount()
+        }
     }
 
     private initTiles(): void {

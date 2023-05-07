@@ -15,7 +15,7 @@ export class mainMenuController extends Component {
     @property({ type: MainMenuModel })
     private mainMenuModel: MainMenuModel | null = null;
 
-    protected start(): void {
+    protected onLoad(): void {
         const eventsController = this.getComponent(EventsController)
         if (eventsController === null) throw new ErrorMessage('EventsController').notAdded
         if (this.mainMenu === null) throw new ErrorMessage('MainMenu').notDefined
@@ -30,8 +30,21 @@ export class mainMenuController extends Component {
         GlobalSettings.setClicksCount(difficultyLevel.getClicksCount());
         GlobalSettings.setTotalPointsCount(difficultyLevel.getTotalPointsCount());
 
+        GlobalSettings.setBombsCount(difficultyLevel.getBombsCount());
+        GlobalSettings.setTeleportsCount(difficultyLevel.getTeleportsCount());
         GlobalSettings.setResetsCount(difficultyLevel.getResetsCount());
+
+        if (this.mainMenu === null) throw new ErrorMessage('MainMenu').notDefined
+        this.mainMenu.loading();
+
         director.loadScene('scene.gameplayScene');
+    }
+
+    protected onDestroy(): void {
+        const eventsController = this.getComponent(EventsController)
+        if (eventsController === null) throw new ErrorMessage('EventsController').notAdded
+
+        eventsController.getEventTarget().off('onStartGame', this.startGame, this);
     }
 }
 

@@ -12,6 +12,9 @@ export class MainMenu extends Component {
     @property({type: Node})
     private difficultySelectionMenu: Node | null = null;
 
+    @property({type: Node})
+    private loadingAnimation: Node | null = null;
+
     public initDifficultySettingsButton(difficultyLevels: GameSettings[]): void {
         difficultyLevels.forEach((difficultyLevel: GameSettings, index) => {
             const difficultySelectionMenu = this.node.getChildByName('DifficultySelectionMenu');
@@ -25,6 +28,16 @@ export class MainMenu extends Component {
                 difficultySetting.setValue(difficultyLevel);
             }
         });
+    }
+
+    public loading () {
+        if (this.playButton === null) throw new ErrorMessage('PlayButton').notAdded
+        if (this.difficultySelectionMenu === null) throw new ErrorMessage('DifficultySelectionMenu').notAdded
+        if (this.loadingAnimation === null) throw new ErrorMessage('LoadingAnimation').notAdded
+
+        this.playButton.active = false;
+        this.difficultySelectionMenu.active = false;
+        this.loadingAnimation.active = true
     }
 
     private openDifficultySelectionMenu(): void {

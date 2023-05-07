@@ -3,12 +3,13 @@ import { DragAndDropLogic } from './DragAndDropLogic';
 import { BonusesController } from '../../controllers/gameplayScene/BonusesController';
 import { BonusesPanel } from './BonusesPanel';
 import { ErrorMessage } from '../../utils/ErrorMessage';
+import { EventsController } from '../../controllers/EventsController';
 const { ccclass, property } = _decorator;
 
 @ccclass('BombButton')
 export class BombButton extends Component {
-    @property({ type: BonusesController })
-    private bonusesController: BonusesController | null = null;
+    @property({ type: EventsController })
+    private eventsController: EventsController | null = null;
 
     @property({ type: BonusesPanel })
     private bonusesPanel: BonusesPanel | null = null;
@@ -24,7 +25,6 @@ export class BombButton extends Component {
     }
 
     private takeBomb(): void {
-        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
         if (this.bonusesPanel === null) throw new ErrorMessage('BonusesPanel').notDefined
         if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
         if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
@@ -32,17 +32,19 @@ export class BombButton extends Component {
         if (this.bonusesPanel.getBombsCount() > 0 && this.isDroped) {
             this.isDroped = false;
             this.dragAndDropLogic.drag();
-            this.bonusesController.useBomb();
 
             this.scheduleOnce(() => {
+                if (this.eventsController === null) throw new ErrorMessage('EventsController').notDefined
                 if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
+                
+                this.eventsController.getEventTarget().emit('onTakeBomb');
                 this.canvas.on(Input.EventType.MOUSE_UP, this.dropBomb, this);
             }, .2)
         }
     }
 
     private dropBomb(): void {
-        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
+        if (this.eventsController === null) throw new ErrorMessage('EventsController').notDefined
         if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
         if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
 
@@ -50,7 +52,7 @@ export class BombButton extends Component {
             this.isDroped = true;
             this.canvas.off(Input.EventType.MOUSE_UP, this.dropBomb, this);
             this.dragAndDropLogic.drop();
-            this.bonusesController.runDefaultScript();
+            this.eventsController.getEventTarget().emit('onDropBomb');
         }
     }
 }

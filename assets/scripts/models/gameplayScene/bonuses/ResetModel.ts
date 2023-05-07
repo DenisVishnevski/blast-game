@@ -49,5 +49,9 @@ export class ResetModel extends Component implements IResetBonus {
     public getAutoActuationsCount(): number {
         return this.autoActuationsCount 
     }
+
+    public restoreAutoActuationsCount(): void {
+        this.autoActuationsCount = 1;
+    }
 }
 

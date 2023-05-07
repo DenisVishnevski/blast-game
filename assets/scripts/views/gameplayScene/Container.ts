@@ -7,6 +7,7 @@ import { TilesAnimationsHandler } from './TilesAnimationsHandler';
 import { TileModel } from '../../models/gameplayScene/TileModel';
 import { GameSettings } from '../../models/GameSettings';
 import { ErrorMessage } from '../../utils/ErrorMessage';
+import { BlockingPanel } from './BlockingPanel';
 const { ccclass, property } = _decorator;
 @ccclass('Container')
 export class Container extends Component {
@@ -19,8 +20,11 @@ export class Container extends Component {
     @property({ type: EventsController })
     private eventsController: EventsController | null = null;
 
-    @property({ type: Button })
-    private blockPanel: Button | null = null;
+    @property({ type: BlockingPanel })
+    private blockingPanel: BlockingPanel | null = null;
+
+    @property
+    private lockTime: number = 0;
 
     private tilesAnimation: TilesAnimationsHandler | null = null;
 
@@ -44,7 +48,8 @@ export class Container extends Component {
 
     public updateTiles(destroyedTiles: { x: number, y: number }[], tilesList: TileModel[][]) {
         if (this.tilesAnimation === null) throw new ErrorMessage('TilesAnimationsHandler').notDefined
-        this.blockTilesForClick();
+        if (this.blockingPanel === null) throw new ErrorMessage('BlockingPanel').notDefined
+        this.blockingPanel.enableForWhile(this.lockTime);
 
         this.tilesAnimation.destroyAnimation(new TilesArray(destroyedTiles).getTilesByСoordinates(this.tiles));
         this.tiles.forEach((tilesColumn: Tile[], x) => {
@@ -68,7 +73,6 @@ export class Container extends Component {
             });
 
         });
-        this.scheduleOnce(this.unblockTilesForClick, .55);
     }
 
     public quickUpdate(changedTiles: { x: number, y: number }[], tilesList: TileModel[][]): void {
@@ -81,12 +85,13 @@ export class Container extends Component {
     }
 
     public resetTiles(tilesList: TileModel[][]): void {
-        this.blockTilesForClick();
+        if (this.blockingPanel === null) throw new ErrorMessage('BlockingPanel').notDefined
+        this.blockingPanel.enableForWhile(this.lockTime);
+        
         const tilesAnimation = new TilesAnimationsHandler();
         tilesAnimation.resetAnimation(this.tiles);
         this.setSpritesToTiles(tilesList);
 
-        this.scheduleOnce(this.unblockTilesForClick, .55);
     }
 
     public async setSpritesToTiles(tilesList: TileModel[][]): Promise<void> {
@@ -95,16 +100,6 @@ export class Container extends Component {
                 tile.setSprite(tilesList[x][y].getId());
             });
         });
-    }
-
-    private blockTilesForClick() {
-        if (this.blockPanel === null) throw new ErrorMessage('blockPanel').notDefined
-        this.blockPanel.onEnable();
-    }
-
-    private unblockTilesForClick() {
-        if (this.blockPanel === null) throw new ErrorMessage('blockPanel').notDefined
-        this.blockPanel.onDisable();
     }
 
     private async setTilesSize(): Promise<void> {

@@ -5,12 +5,13 @@ import { DragAndDropLogic } from './DragAndDropLogic';
 import { Tile } from './Tile';
 import { TilesSpritesList } from './TilesSpritesList';
 import { ErrorMessage } from '../../utils/ErrorMessage';
+import { EventsController } from '../../controllers/EventsController';
 const { ccclass, property } = _decorator;
 
 @ccclass('TeleportButton')
 export class TeleportButton extends Component {
-    @property({ type: BonusesController })
-    private bonusesController: BonusesController | null = null;
+    @property({ type: EventsController })
+    private eventsController: EventsController | null = null;
 
     @property({ type: BonusesPanel })
     private bonusesPanel: BonusesPanel | null = null;
@@ -47,16 +48,17 @@ export class TeleportButton extends Component {
     private takeTeleport(): void {
         if (this.bonusesPanel === null) throw new ErrorMessage('BonusesPanel').notDefined
         if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
-        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
 
         if (this.bonusesPanel.getTeleportsCount() > 0 && this.isDroped) {
             this.isDroped = false;
             this.dragAndDropLogic.drag();
-            this.bonusesController.useTeleport();
 
             this.scheduleOnce(() => {
                 if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
+                if (this.eventsController === null) throw new ErrorMessage('EventsController').notDefined
+                
                 this.canvas.on(Input.EventType.MOUSE_UP, this.dropTeleportHandler, this);
+                this.eventsController.getEventTarget().emit('onTakeTeleport');
             }, .2)
         }
     }
@@ -72,15 +74,14 @@ export class TeleportButton extends Component {
     public dropTeleport(): void {
         if (this.bonusesPanel === null) throw new ErrorMessage('BonusesPanel').notDefined
         if (this.dragAndDropLogic === null) throw new ErrorMessage('DragAndDropLogic').notDefined
-        if (this.bonusesController === null) throw new ErrorMessage('BonusesController').notDefined
+        if (this.eventsController === null) throw new ErrorMessage('EventsController').notDefined
         if (this.canvas === null) throw new ErrorMessage('canvas').notDefined
 
         this.isDroped = true;
         this.hideTile();
-        this.bonusesController.cancelTeleport()
+        this.eventsController.getEventTarget().emit('onDropTeleport');
         this.canvas.off(Input.EventType.MOUSE_UP, this.dropTeleportHandler, this);
         this.dragAndDropLogic.drop();
-        this.bonusesController.runDefaultScript();
     }
 }
 
